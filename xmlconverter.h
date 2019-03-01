@@ -16,6 +16,7 @@
 #include <QTextEdit>
 #include <QTextStream>
 #include <QProgressBar>
+#include <QTime>
 
 class xmlconverter : public QMainWindow
 {
@@ -39,6 +40,8 @@ public:
 	QString filePath;
 	void openFile();
 	void generateFile();
+	
+	QTime t;
 public slots:
 	void indexSlot(QString msg);
 	void reciveErrMsgSlot(QString msg);

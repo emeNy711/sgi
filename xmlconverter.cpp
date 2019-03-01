@@ -60,6 +60,9 @@ void xmlconverter::openFile()
 
 void xmlconverter::generateFile()
 {
+	t;
+	t.start();
+
 	textEdit->clear();
 	progressBar.reset();
 
@@ -100,6 +103,12 @@ void xmlconverter::generateFile()
 void xmlconverter::indexSlot(QString msg)
 {
 	label->setText(msg);
+
+	if (msg == "Готово!")
+	{
+		label->setText(QString::number(t.elapsed() / 1000));
+	}
+
 	QApplication::processEvents();
 }
 

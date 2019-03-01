@@ -9,21 +9,34 @@ XMLReader::~XMLReader()
 {
 }
 
-
-bool XMLReader::read(QIODevice *device, QString filePath, QString fileName)
+void XMLReader::init( QString _filePath, QString _fileName)
 {
-	xml.setDevice(device);
+	filePath = _filePath;
+	fileName = _fileName;
+}
+
+bool XMLReader::read(/*QIODevice *device, QString filePath, QString fileName*/)
+{
+	//xml.setDevice(device);
 	byCounter = 0;
 	byCounterScale = 0;
 	billFileName = fileName + ".xml";
 	parsingError = false;
 
-	db = QSqlDatabase::addDatabase("QODBC");
+	
 	QFileInfo fileinfo(filePath);
 	QString baseName = fileinfo.baseName();		// рудимент
 	
 	QString path = filePath + "/" + fileName;
 	QDir().mkdir(path);
+
+	QFile file(path + ".xml");
+	if (!file.open(QFile::ReadOnly | QFile::Text))
+	{
+		setParsingError("Не могу открыть файл " + billFileName);
+		return 1;
+	}
+	xml.setDevice(&file);
 
 	QDir dir;
 	if(fileExists(path+"/SETTINGS.DBF"))
@@ -69,11 +82,12 @@ bool XMLReader::read(QIODevice *device, QString filePath, QString fileName)
 	if (parsingError)
 		return false;
 
+	db = QSqlDatabase::addDatabase("QODBC", fileName);
 	QString dsn = QString("Driver={Microsoft dBASE Driver (*.dbf)};DriverID=277;Dbq=%1").arg(path);//277
 	db.setDatabaseName(dsn);
 	if (!db.open()) 
 	{  // is OK 
-		QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
+		setParsingError("Ошибка в " + fileName + ". " + db.lastError().text());
 		return true;
 	}
 	

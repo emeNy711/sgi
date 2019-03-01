@@ -1,5 +1,4 @@
 project(xmlconverter)
-
 cmake_minimum_required(VERSION 2.8)
 
 enable_language(CXX)
@@ -17,11 +16,11 @@ if(WIN32)
   add_definitions(-DWIN32)
 endif()
 
-
 find_package (Qt5Core)
 find_package (Qt5Widgets)
 find_package (Qt5Gui)
 find_package (Qt5Sql)
+find_package (Qt5Concurrent)
 #find_package (Qt5Network)
 
 FILE(GLOB SOURCES *.cpp)
@@ -31,14 +30,18 @@ SET(CMAKE_AUTOMOC ON)
 add_definitions(${Qt5Core_DEFINITIONS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 add_definitions(${Qt5Network_DEFINITIONS})
+add_definitions(${Qt5Concurrent_DEFINITIONS})
 
 include_directories(${Qt5Core_INCLUDES})
 include_directories(${Qt5Widgets_INCLUDES})
+include_directories(${Qt5Concurrent_INCLUDES})
 #include_directories(${Qt5Network_INCLUDES})
 
 set(CMAKE_CXX_FLAGS "${Qt5Core_EXECUTABLE_COMPILE_FLAGS}")
 set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 set(CMAKE_CXX_FLAGS "${Qt5Network_EXECUTABLE_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS "${Qt5Concurrent_EXECUTABLE_COMPILE_FLAGS}")
+
 
 #if(WIN32)
 #	set(MY_WIN_FLAG WIN32)
@@ -59,5 +62,5 @@ set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /SAFESEH:NO")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 									 
 if(WIN32)
-  qt5_use_modules(xmlconverter Core Widgets Sql)
+  qt5_use_modules(xmlconverter Core Widgets Sql Concurrent)
 endif()

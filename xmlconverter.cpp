@@ -143,36 +143,37 @@ void xmlconverter::generateFileThread()
 		//emit readThreadSignal(&file, filePath, fileInfo.baseName());
 		if (count == 0)
 		{
-			thr->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			thr->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
+			//thr->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
+			//thr->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
 
 			reader_thr3 = new XMLReader;
 			reader_thr3->init(filePath, fileInfo.baseName());
 			connect(reader_thr3, &XMLReader::indexSignal, this, &xmlconverter::indexSlot);
 			reader_thr3->moveToThread(thr3);
-			//connect(thr3, &QThread::started, reader_thr3, &XMLReader::read);
-			//thr3->start();
+			connect(thr3, &QThread::started, reader_thr3, &XMLReader::read);
+			thr3->start();
+			
 
-			QtConcurrent::run(reader_thr3, &XMLReader::read);
+			//QtConcurrent::run(reader_thr3, &XMLReader::read);
 
 		}
-		if (count == 1)
+		if (count == 2)
 		{
-			thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
+			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
+			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
 
 			reader_thr3 = new XMLReader;
 			reader_thr3->init(filePath, fileInfo.baseName());
 			reader_thr3->moveToThread(thr4);
-			//connect(thr4, &QThread::started, reader_thr4, &XMLReader::read);
-			//thr4->start();
+			connect(thr4, &QThread::started, reader_thr4, &XMLReader::read);
+			thr4->start();
 
-			QtConcurrent::run(reader_thr3, &XMLReader::read);
+			//QtConcurrent::run(reader_thr3, &XMLReader::read);
 		}
 		if (count == 2)
 		{
-			thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
+			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
+			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
 
 			reader_thr3 = new XMLReader;
 			reader_thr3->init(filePath, fileInfo.baseName());
@@ -184,8 +185,8 @@ void xmlconverter::generateFileThread()
 		}
 		if (count == 3)
 		{
-			thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
+			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
+			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
 
 			reader_thr3 = new XMLReader;
 			reader_thr3->init(filePath, fileInfo.baseName());
@@ -197,8 +198,8 @@ void xmlconverter::generateFileThread()
 		}
 		if (count == 4)
 		{
-			thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
+			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
+			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
 
 			reader_thr3 = new XMLReader;
 			reader_thr3->init(filePath, fileInfo.baseName());
@@ -210,8 +211,8 @@ void xmlconverter::generateFileThread()
 		}
 		if (count == 5)
 		{
-			thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
+			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
+			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
 
 			reader_thr3 = new XMLReader;
 			reader_thr3->init(filePath, fileInfo.baseName());

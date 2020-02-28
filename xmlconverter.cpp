@@ -43,8 +43,8 @@ xmlconverter::~xmlconverter()
 	delete generateBtn;
 	delete HBoxLay;
 	delete VBoxLay;
-	delete textEdit;
-	delete widg;
+	//delete textEdit;
+	//delete widg;
 }
 
 void xmlconverter::openFile()
@@ -106,7 +106,7 @@ void xmlconverter::indexSlot(QString msg)
 
 	if (msg == "Готово!")
 	{
-		label->setText(QString::number(t.elapsed() / 1000));
+		//label->setText(QString::number(t.elapsed() / 1000));
 	}
 
 	QApplication::processEvents();

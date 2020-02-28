@@ -5,6 +5,7 @@
 #include <qtreewidget>
 #include <qxmlstreamreader>
 #include <Qpair>
+#include <QMessageBox>
 #include <QDebug>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -17,20 +18,10 @@ class XMLReader : public QObject
 	Q_OBJECT
 public:
 	XMLReader();
-	void init( QString _filePath, QString _fileName);
-	//bool read(/*QIODevice *device, QString filePath, QString fileName*/);
+	bool read(QIODevice *device, QString filePath, QString fileName);
 	QString errorString() const;
 	~XMLReader();
-
-public slots:
-	bool read(/*QIODevice *device, QString filePath, QString fileName*/);
-
 private:
-
-	QString filePath;
-	QString fileName;
-
-
 	void readXML(QString baseName);
 	void readSettings(QString baseName);
 	void readService(QString baseName);

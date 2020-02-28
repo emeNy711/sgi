@@ -19,8 +19,7 @@ xmlconverter::xmlconverter(QWidget *parent)
 	openBtn = new QPushButton("Открыть");
 	connect(openBtn, &QPushButton::clicked, this, &xmlconverter::openFile);
 	generateBtn = new QPushButton("Сгенерировать");
-	//connect(generateBtn, &QPushButton::clicked, this, &xmlconverter::generateFile);
-	connect(generateBtn, &QPushButton::clicked, this, &xmlconverter::generateFileThread);
+	connect(generateBtn, &QPushButton::clicked, this, &xmlconverter::generateFile);
 	textEdit = new QTextEdit();
 	textEdit->setReadOnly(true);
 	VBoxLay = new QVBoxLayout(widg);
@@ -35,14 +34,6 @@ xmlconverter::xmlconverter(QWidget *parent)
 	VBoxLay->addWidget(textEdit);
 	VBoxLay->addWidget(&progressBar);
 	VBoxLay->addWidget(label);
-	thr = new Thread();
-	thr2 = new Thread();
-	thr3 = new QThread;
-	thr4 = new QThread;
-	thr5 = new QThread;
-	thr6 = new QThread;
-	thr7 = new QThread;
-	thr8 = new QThread;
 }
 
 xmlconverter::~xmlconverter()
@@ -52,8 +43,8 @@ xmlconverter::~xmlconverter()
 	delete generateBtn;
 	delete HBoxLay;
 	delete VBoxLay;
-	delete textEdit;
-	delete widg;
+	//delete textEdit;
+	//delete widg;
 }
 
 void xmlconverter::openFile()
@@ -69,6 +60,9 @@ void xmlconverter::openFile()
 
 void xmlconverter::generateFile()
 {
+	t;
+	t.start();
+
 	textEdit->clear();
 	progressBar.reset();
 
@@ -98,133 +92,12 @@ void xmlconverter::generateFile()
 			continue;
 		}
 		
-		//if (!reader.read(&file, filePath, fileInfo.baseName())) 
-			//reciveErrMsgSlot("Ошибка разбора файла " + ss + ".xml");
+		if (!reader.read(&file, filePath, fileInfo.baseName())) 
+			reciveErrMsgSlot("Ошибка разбора файла " + ss + ".xml");
 		progressBar.setFormat(QString::number(++count) + "/" + QString::number(dirContent.size()));
 		progressBar.setValue(progressBar.value() + 1);
 		//count++;
 	}
-}
-
-void xmlconverter::generateFileThread()
-{
-	/*
-	Thread thr;
-	Thread thr2;
-
-	connect(this, &xmlconverter::readThreadSignal, &thr, &Thread::thr_read_slot, Qt::DirectConnection);
-	connect(this, &xmlconverter::readThreadSignal, &thr2, &Thread::thr_read_slot, Qt::DirectConnection);
-	thr.start();
-	thr2.start();
-	*/
-	/*##################################################################################*/
-
-	start = QDateTime::currentDateTime();
-
-	t;
-	t.start();
-
-	QDir dir(filePath);
-	QFileInfoList dirContent = dir.entryInfoList(QStringList()
-		<< "*.xml",
-		QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-
-
-	
-	
-	/**/
-	int count = 0;
-	for (const auto &fileInfo : dirContent)
-	{
-		QString ss = fileInfo.baseName();
-
-		//reciveErrMsgSlot("Начал " + ss + ".xml \n");
-		
-		//emit readThreadSignal(&file, filePath, fileInfo.baseName());
-		if (count == 0)
-		{
-			//thr->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			//thr->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
-
-			reader_thr3 = new XMLReader;
-			reader_thr3->init(filePath, fileInfo.baseName());
-			connect(reader_thr3, &XMLReader::indexSignal, this, &xmlconverter::indexSlot);
-			reader_thr3->moveToThread(thr3);
-			connect(thr3, &QThread::started, reader_thr3, &XMLReader::read);
-			thr3->start();
-			
-
-			//QtConcurrent::run(reader_thr3, &XMLReader::read);
-
-		}
-		if (count == 2)
-		{
-			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
-
-			reader_thr3 = new XMLReader;
-			reader_thr3->init(filePath, fileInfo.baseName());
-			reader_thr3->moveToThread(thr4);
-			connect(thr4, &QThread::started, reader_thr4, &XMLReader::read);
-			thr4->start();
-
-			//QtConcurrent::run(reader_thr3, &XMLReader::read);
-		}
-		if (count == 2)
-		{
-			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
-
-			reader_thr3 = new XMLReader;
-			reader_thr3->init(filePath, fileInfo.baseName());
-			reader_thr3->moveToThread(thr4);
-			//connect(thr4, &QThread::started, reader_thr4, &XMLReader::read);
-			//thr4->start();
-
-			QtConcurrent::run(reader_thr3, &XMLReader::read);
-		}
-		if (count == 3)
-		{
-			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
-
-			reader_thr3 = new XMLReader;
-			reader_thr3->init(filePath, fileInfo.baseName());
-			reader_thr3->moveToThread(thr4);
-			//connect(thr4, &QThread::started, reader_thr4, &XMLReader::read);
-			//thr4->start();
-
-			QtConcurrent::run(reader_thr3, &XMLReader::read);
-		}
-		if (count == 4)
-		{
-			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
-
-			reader_thr3 = new XMLReader;
-			reader_thr3->init(filePath, fileInfo.baseName());
-			reader_thr3->moveToThread(thr4);
-			//connect(thr4, &QThread::started, reader_thr4, &XMLReader::read);
-			//thr4->start();
-
-			QtConcurrent::run(reader_thr3, &XMLReader::read);
-		}
-		if (count == 5)
-		{
-			//thr2->init(fileInfo.absoluteFilePath(), filePath, fileInfo.baseName());
-			//thr2->start(/*&file, fileInfo.absoluteFilePath(), fileInfo.baseName()*/);
-
-			reader_thr3 = new XMLReader;
-			reader_thr3->init(filePath, fileInfo.baseName());
-			reader_thr3->moveToThread(thr4);
-			//connect(thr4, &QThread::started, reader_thr4, &XMLReader::read);
-			//thr4->start();
-
-			QtConcurrent::run(reader_thr3, &XMLReader::read);
-		}
-		++count;
-	}
-	
 }
 
 void xmlconverter::indexSlot(QString msg)
@@ -233,16 +106,7 @@ void xmlconverter::indexSlot(QString msg)
 
 	if (msg == "Готово!")
 	{
-		finish = QDateTime::currentDateTime();
-		int secs = finish.secsTo(start);
-		start.addSecs(secs);
-		int msecs = finish.time().msecsTo(start.time());
-
-		int msecs_duration = secs * 1000 + msecs;
-		//t.elapsed();
-
-		label->setText(QString::number(t.elapsed() / 1000));
-
+		//label->setText(QString::number(t.elapsed() / 1000));
 	}
 
 	QApplication::processEvents();

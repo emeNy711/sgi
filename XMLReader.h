@@ -77,6 +77,7 @@ private:
 	void readLastPay(QString billIndex);
 	void readTotal(QString billIndex);
 	void readGraphPay(QString billIndex);
+	//void readFine(QString billIndex);
 	void readPrivelInfo(QString billIndex);
 	void readPrivelInfoItem(QString billIndex);
 	void readNewPage(QString billIndex);

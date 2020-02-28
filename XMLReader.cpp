@@ -222,6 +222,7 @@ bool XMLReader::read(/*QIODevice *device, QString filePath, QString fileName*/)
 		"[feetotal] varchar(20),"
 		"[pays] varchar(20),"
 		"[Tsumma] varchar(20),"
+		"[fineSalSum] varchar(20),"
 		"[recReading] varchar(20),"
 		"[recPeople] varchar(2),"
 		"[recSrvoff] varchar(2),"
@@ -235,7 +236,8 @@ bool XMLReader::read(/*QIODevice *device, QString filePath, QString fileName*/)
 		"[feeyear] varchar(20),"
 		"[feehlfyear] varchar(20),"
 		"[Gsumma] varchar(10),"
-		"[sumrest] varchar(20))");
+		"[sumrest] varchar(20))"); //,"
+		//"[fineSalSum] varchar(20))");
 	if (!query_ptr->exec(sql))
 		setParsingError("Ошибка в " + billFileName + ". " + query_ptr->lastError().text());
 	qDebug() << query_ptr->lastQuery();
@@ -592,6 +594,13 @@ void XMLReader::readClientInfo(QString billIndex)
 	QString checksum_Osh = xml.attributes().value("checksum_Osh").toString();
 	QString checksum = xml.attributes().value("checksum").toString();
 	QString fio = xml.attributes().value("fio").toString();
+	if (fio.count("'") > 0)
+	{
+		QString tmp_fio = fio;
+		QString tmp = tmp_fio.replace("'", "");
+		emit sendErrMsgSignal(QString("Заменил \"%1\" на \"%2\" в number = %3 %4.\n").arg(fio).arg(tmp).arg(billIndex).arg(billFileName));
+		fio = tmp;
+	}
 	QString abcode = xml.attributes().value("abcode").toString();
 
 	QString sql = QString::fromLocal8Bit("UPDATE [BILLLIST] SET [Cabcode] = '%1', [Cfio] = '%2', [Caddress] = '%3', [Cpostindex] = '%4', [Cchecksum] = '%5' "
@@ -678,6 +687,14 @@ void XMLReader::readQRcode(QString billIndex)
 
 	QString data = xml.attributes().value("data").toString();
 
+	if (data.count("'") > 0)
+	{
+		QString tmp_data = data;
+		QString tmp = tmp_data.replace("'", "");
+		emit sendErrMsgSignal(QString("Заменил \"%1\" на \"%2\" в number = %3 %4.\n").arg(data).arg(data).arg(billIndex).arg(billFileName));
+		data = tmp;
+	}
+
 	QString sql = QString::fromLocal8Bit("UPDATE [BILLLIST] SET [Qrdata] = '%1'"
 		" WHERE [number] = '%2'")
 		.arg(data).arg(billIndex);
@@ -726,6 +743,8 @@ void XMLReader::readStoredInfo(QString billIndex)
 			readTotal(billIndex);
 		else if (xml.name() == "GraphPay")
 			readGraphPay(billIndex);
+//		else if (xml.name() == "Fine")
+	//		readFine(billIndex);
 		else if (xml.name() == "Animals")
 			readAnimals(billIndex);
 		else if (xml.name() == "GroupCounter")
@@ -1380,6 +1399,7 @@ void XMLReader::readTotal(QString billIndex)
 	QString feetotal = xml.attributes().value("feetotal").toString();
 	QString pays = xml.attributes().value("pays").toString();
 	QString summa = xml.attributes().value("summa").toString();
+	QString finesum = xml.attributes().value("finesum").toString();
 	QString recalcReading = xml.attributes().value("recalcReading").toString();
 	QString feecorr = xml.attributes().value("feecorr").toString();
 	QString equipments = xml.attributes().value("equipments").toString();
@@ -1394,11 +1414,11 @@ void XMLReader::readTotal(QString billIndex)
 	QString recalcTmpnotlive = xml.attributes().value("recalcTmpnotlive").toString();
 
 	QStringList fieldList;
-	fieldList << "datebeg" << "feemonth" << "feemonthcr" << "month2" << "saldobeg" << "feetotal" << "pays" << "Tsumma" << "recReading" 
+	fieldList << "datebeg" << "feemonth" << "feemonthcr" << "month2" << "saldobeg" << "feetotal" << "pays" << "Tsumma" << "fineSalSum" << "recReading" 
 		<< "feecorr" << "equipments" << "grphpaysum" << "ftotalcur" << "feevalprev" << "feevalcur" << "feeyear" << "feehlfyear"
 		<< "recPeople" << "recSrvoff" << "recTmpnotl";
 	QStringList valueList;
-	valueList << datebeg << feemonth << feemonthcur << month2 << saldobeg << feetotal << pays << summa << recalcReading
+	valueList << datebeg << feemonth << feemonthcur << month2 << saldobeg << feetotal << pays << summa << finesum << recalcReading
 		<< feecorr << equipments << graphpaysum << feetotalcur << feevalprev << feevalcur << feeyear << feehalfyear 
 		<< recalcPeople << recalcServiceoff << recalcTmpnotlive;
 
@@ -1423,6 +1443,23 @@ void XMLReader::readGraphPay(QString billIndex)
 
 	xml.readNextStartElement();
 }
+/*
+void XMLReader::readFine(QString billIndex)
+{
+	Q_ASSERT_X(xml.isStartElement() && xml.name() == "Fine", "readXML(). Ожидается тег Fine", "нажмите \"Пропустить\" что бы продолжить");
+
+	QString fineSaldoSum = xml.attributes().value("fineSaldoSum").toString();
+
+	QStringList fieldList;
+	fieldList << "fineSalSum";
+	QStringList valueList;
+	valueList << fineSaldoSum;
+
+	queryUpdate("BILLLIST", fieldList, valueList, "number", billIndex);
+
+	xml.skipCurrentElement();
+}
+*/
 
 void XMLReader::readPrivelInfo(QString billIndex)
 {

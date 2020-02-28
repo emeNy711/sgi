@@ -52,8 +52,8 @@ xmlconverter::~xmlconverter()
 	delete generateBtn;
 	delete HBoxLay;
 	delete VBoxLay;
-	delete textEdit;
-	delete widg;
+	//delete textEdit;
+	//delete widg;
 }
 
 void xmlconverter::openFile()
@@ -69,6 +69,9 @@ void xmlconverter::openFile()
 
 void xmlconverter::generateFile()
 {
+	t;
+	t.start();
+
 	textEdit->clear();
 	progressBar.reset();
 
@@ -233,16 +236,7 @@ void xmlconverter::indexSlot(QString msg)
 
 	if (msg == "Готово!")
 	{
-		finish = QDateTime::currentDateTime();
-		int secs = finish.secsTo(start);
-		start.addSecs(secs);
-		int msecs = finish.time().msecsTo(start.time());
-
-		int msecs_duration = secs * 1000 + msecs;
-		//t.elapsed();
-
-		label->setText(QString::number(t.elapsed() / 1000));
-
+		//label->setText(QString::number(t.elapsed() / 1000));
 	}
 
 	QApplication::processEvents();

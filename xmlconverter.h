@@ -17,7 +17,7 @@
 #include <QTextEdit>
 #include <QTextStream>
 #include <QProgressBar>
-#include <QtConcurrent>
+#include <QTime>
 
 class xmlconverter : public QMainWindow
 {
@@ -41,23 +41,8 @@ public:
 	QString filePath;
 	void openFile();
 	void generateFile();
-	void generateFileThread();
-
-	Thread *thr;
-	Thread *thr2;
-	QThread *thr3;
-	QThread *thr4;
-	QThread *thr5;
-	QThread *thr6;
-	QThread *thr7;
-	QThread *thr8;
-	XMLReader *reader_thr3;
-	XMLReader *reader_thr4;
-
-	QDateTime start;
-	QDateTime finish;
+	
 	QTime t;
-
 public slots:
 	void indexSlot(QString msg);
 	void reciveErrMsgSlot(QString msg);
